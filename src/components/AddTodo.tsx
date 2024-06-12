@@ -23,11 +23,17 @@ const AddTodo: React.FC = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(addTodo, {
+    onError: (error, newTodo, context) => {
+      console.error(error);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries("todos");
       window.alert(
         "New Todo Successfully Created! Note: the list won't include new todo item"
       );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("todos");
     },
   });
 
