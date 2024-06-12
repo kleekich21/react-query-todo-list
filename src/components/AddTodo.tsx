@@ -29,7 +29,7 @@ const AddTodo: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("todos");
       window.alert(
-        "New Todo Successfully Created! Note: the list won't include new todo item"
+        "New Todo Successfully Created!\nNote: 안타깝게도 리스트 반영은 API에서 제공하지 않습니다."
       );
     },
     onSettled: () => {
