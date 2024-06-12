@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Todo } from "../types/todos";
 
 const addTodo = async (newTodo: Omit<Todo, "id">): Promise<Todo> => {
@@ -18,7 +18,22 @@ const addTodo = async (newTodo: Omit<Todo, "id">): Promise<Todo> => {
 };
 
 const AddTodo: React.FC = () => {
-  return <div>Add Todo</div>;
+  const [title, setTitle] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Enter Todo"
+      />
+      <button type="submit">Add Todo</button>
+    </form>
+  );
 };
 
 export default AddTodo;
