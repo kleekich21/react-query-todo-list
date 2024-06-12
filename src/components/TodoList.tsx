@@ -1,11 +1,6 @@
 import React from "react";
 import { useQuery } from "react-query";
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Todo } from "../types/todos";
 
 const fetchTodos = async (): Promise<Todo[]> => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
