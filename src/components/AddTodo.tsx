@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { Todo } from "../types/todos";
 
 const addTodo = async (newTodo: Omit<Todo, "id">): Promise<Todo> => {
@@ -19,9 +20,18 @@ const addTodo = async (newTodo: Omit<Todo, "id">): Promise<Todo> => {
 
 const AddTodo: React.FC = () => {
   const [title, setTitle] = useState("");
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(addTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    mutation.mutate({ title, completed: false });
+    setTitle("");
   };
   return (
     <form onSubmit={handleSubmit}>
