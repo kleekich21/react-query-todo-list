@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import TodoList from "./components/TodoList";
@@ -9,7 +9,9 @@ function App() {
     <div>
       <h1>Todo List</h1>
       <AddTodo />
-      <TodoList />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TodoList />
+      </Suspense>
     </div>
   );
 }

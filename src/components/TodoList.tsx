@@ -11,13 +11,10 @@ const fetchTodos = async (): Promise<Todo[]> => {
 };
 
 const TodoList: React.FC = () => {
-  const { data, error, isLoading } = useQuery<Todo[], Error>(
-    "todos",
-    fetchTodos
-  );
+  const { data } = useQuery<Todo[], Error>("todos", fetchTodos, {
+    suspense: true,
+  });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
   return (
     <ul>
       {data?.map((todo) => (
