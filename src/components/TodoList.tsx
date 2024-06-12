@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Todo } from "../types/todos";
+import TodoDetails from "./TodoDetails";
 
 const fetchTodos = async (): Promise<Todo[]> => {
   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -11,6 +12,7 @@ const fetchTodos = async (): Promise<Todo[]> => {
 };
 
 const TodoList: React.FC = () => {
+  const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null);
   const { data } = useQuery<Todo[], Error>("todos", fetchTodos, {
     suspense: true,
   });
@@ -18,7 +20,12 @@ const TodoList: React.FC = () => {
   return (
     <ul>
       {data?.map((todo) => (
-        <li key={todo.id}>{todo.title}</li>
+        <li key={todo.id} onClick={() => setSelectedTodoId(todo.id)}>
+          {todo.title}
+          {selectedTodoId === todo.id && (
+            <TodoDetails todoId={selectedTodoId} />
+          )}
+        </li>
       ))}
     </ul>
   );
