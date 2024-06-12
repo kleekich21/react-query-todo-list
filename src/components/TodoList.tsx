@@ -1,4 +1,5 @@
 import React from "react";
+import { useQuery } from "react-query";
 
 interface Todo {
   id: number;
@@ -14,8 +15,21 @@ const fetchTodos = async (): Promise<Todo[]> => {
   return response.json();
 };
 
-function TodoList() {
-  return <div>TodoList</div>;
-}
+const TodoList: React.FC = () => {
+  const { data, error, isLoading } = useQuery<Todo[], Error>(
+    "todos",
+    fetchTodos
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  return (
+    <ul>
+      {data?.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  );
+};
 
 export default TodoList;
