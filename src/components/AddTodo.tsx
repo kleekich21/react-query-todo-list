@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Todo } from "../types/todos";
 
 const addTodo = async (newTodo: Omit<Todo, "id">): Promise<Todo> => {
@@ -22,18 +22,19 @@ const AddTodo: React.FC = () => {
   const [title, setTitle] = useState("");
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(addTodo, {
-    onError: (error, newTodo, context) => {
+  const mutation = useMutation({
+    mutationFn: addTodo,
+    onError: (error) => {
       console.error(error);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("todos");
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
       window.alert(
         "New Todo Successfully Created!\nNote: 안타깝게도 리스트 반영은 API에서 제공하지 않습니다."
       );
     },
     onSettled: () => {
-      queryClient.invalidateQueries("todos");
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
@@ -42,8 +43,13 @@ const AddTodo: React.FC = () => {
     mutation.mutate({ title, completed: false });
     setTitle("");
   };
+
+  if (mutation.isPending) return <div>Adding todo...</div>;
   return (
     <form onSubmit={handleSubmit}>
+      {mutation.error && (
+        <h5 onClick={() => mutation.reset()}>{mutation.error.message}</h5>
+      )}
       <input
         type="text"
         value={title}
