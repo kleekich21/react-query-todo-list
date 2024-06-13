@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Todo } from "../types/todos";
 import TodoDetails from "./TodoDetails";
 
@@ -13,8 +13,9 @@ const fetchTodos = async (): Promise<Todo[]> => {
 
 const TodoList: React.FC = () => {
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null);
-  const { data } = useQuery<Todo[], Error>("todos", fetchTodos, {
-    suspense: true,
+  const { data } = useSuspenseQuery({
+    queryKey: ["todos"],
+    queryFn: fetchTodos,
   });
 
   return (

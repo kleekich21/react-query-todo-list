@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Todo } from "../types/todos";
 
 const fetchTodoById = async (id: number): Promise<Todo> => {
@@ -17,13 +17,13 @@ interface TodoDetailProps {
 }
 
 const TodoDetail: React.FC<TodoDetailProps> = ({ todoId }) => {
-  const { data, error, isLoading } = useQuery<Todo, Error>(
-    ["todo", todoId],
-    () => fetchTodoById(todoId)
-  );
+  const { data, error, isPending, isError } = useQuery({
+    queryKey: ["todo", todoId],
+    queryFn: () => fetchTodoById(todoId),
+  });
 
-  if (isLoading) return <div>Loding...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isPending) return <div>Loding...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
   return (
     <div>
       <h2>{data?.title}</h2>
