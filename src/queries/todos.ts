@@ -4,23 +4,30 @@ import {
   inferQueryKeys,
 } from "@lukemorales/query-key-factory";
 import { Todo } from "../types/todos";
+import axios from "axios";
 
-const fetchTodos = async (): Promise<Todo[]> => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  if (!response.ok) {
-    throw new Error("Error Fetching Todo List");
-  }
-  return response.json();
+const fetchTodos = async (): Promise<Todo[] | void> => {
+  const response = await axios
+    .get("https://jsonplaceholder.typicode.com/todos")
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      throw new Error("Error Fetching Todo List");
+    });
+  return response.data;
 };
 
 const fetchTodoById = async (id: number): Promise<Todo> => {
-  const response = await fetch(
-    `https://jsonplaceholder.typicode.com/todos/${id}`
-  );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
+  const response = await axios
+    .get(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      throw new Error("Error Fetching Todo List");
+    });
+  return response.data;
 };
 
 export const todos = createQueryKeys("todos", {
