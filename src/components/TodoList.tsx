@@ -4,8 +4,9 @@ import { useTodoList } from "../queries/todos";
 
 const TodoList: React.FC = () => {
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null);
+  const { data, isError, error } = useTodoList();
 
-  const { data } = useTodoList();
+  if (isError) return <div>Error: {error?.message}</div>;
 
   return (
     <ul>
