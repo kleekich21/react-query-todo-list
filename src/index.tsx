@@ -3,16 +3,40 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryCache,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { ToastContainer, toast } from "react-toastify";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const queryClient = new QueryClient();
+const queryErrorHandler = (error: Error) => {
+  console.log("ERROR!!!!!!!!!");
+  toast.error(`${error.message}`, {});
+};
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      onError: queryErrorHandler,
+    },
+    queries: {
+      throwOnError: true,
+    },
+  },
+  queryCache: new QueryCache({
+    onError: queryErrorHandler,
+  }),
+});
+
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ToastContainer />
       <App />
     </QueryClientProvider>
   </React.StrictMode>
