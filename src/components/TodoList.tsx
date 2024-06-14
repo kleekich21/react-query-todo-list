@@ -1,22 +1,11 @@
 import React, { useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Todo } from "../types/todos";
 import TodoDetails from "./TodoDetails";
-
-const fetchTodos = async (): Promise<Todo[]> => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  if (!response.ok) {
-    throw new Error("Error Fetching Todo List");
-  }
-  return response.json();
-};
+import { useTodoList } from "../queries/todos";
 
 const TodoList: React.FC = () => {
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null);
-  const { data } = useSuspenseQuery({
-    queryKey: ["todos"],
-    queryFn: fetchTodos,
-  });
+
+  const { data } = useTodoList();
 
   return (
     <ul>
