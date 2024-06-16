@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import "./App.css";
 import TodoList from "./components/TodoList";
 import AddTodo from "./components/AddTodo";
@@ -9,10 +10,12 @@ function App() {
     <div>
       <h1>Todo List</h1>
       <AddTodo />
-      <TodoCount />
-      <Suspense fallback={<div>Loading...</div>}>
-        <TodoList />
-      </Suspense>
+      <ErrorBoundary fallback={<div> ERRROR! </div>}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TodoCount />
+          <TodoList />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

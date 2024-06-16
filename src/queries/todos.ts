@@ -10,10 +10,12 @@ const fetchTodos = async (): Promise<Todo[] | void> => {
   const response = await axios
     .get("https://jsonplaceholder.typicode.com/todos")
     .then((res) => {
+      throw new Error("TEST ERROR"); // TODO: will be deleted
       return res;
     })
     .catch((err) => {
-      throw new Error("Error Fetching Todo List");
+      console.log(`ERROR: ${err}`);
+      throw new Error(err);
     });
   return response.data;
 };

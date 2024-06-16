@@ -22,6 +22,7 @@ const queryErrorHandler = (error: Error) => {
 const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
+      throwOnError: true,
       onError: queryErrorHandler,
     },
     queries: {
