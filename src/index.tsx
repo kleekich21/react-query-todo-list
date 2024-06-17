@@ -8,6 +8,7 @@ import {
   QueryCache,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ToastContainer, toast } from "react-toastify";
 
 const root = ReactDOM.createRoot(
@@ -39,6 +40,7 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ToastContainer />
       <App />
+      <ReactQueryDevtools />
     </QueryClientProvider>
   </React.StrictMode>
 );
