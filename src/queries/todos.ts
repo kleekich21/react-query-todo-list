@@ -5,18 +5,21 @@ import {
 } from "@lukemorales/query-key-factory";
 import { Todo } from "../types/todos";
 import axios from "axios";
+import { delay } from "../utils";
 
 const fetchTodos = async (): Promise<Todo[] | void> => {
-  const response = await axios
-    .get("https://jsonplaceholder.typicode.com/todos")
-    .then((res) => {
-      throw new Error("TEST ERROR"); // TODO: will be deleted
+  const delayPromise = delay(2500); // 의도적으로 일정 시간 동안 로딩 화면을 보여줘야하는 상황
+  const fetchPromise = axios.get("https://jsonplaceholder.typicode.com/todos");
+
+  const response = await Promise.all([delayPromise, fetchPromise])
+    .then(([_, res]) => {
       return res;
     })
     .catch((err) => {
       console.log(`ERROR: ${err}`);
-      throw new Error(err);
+      return { data: [] };
     });
+
   return response.data;
 };
 
