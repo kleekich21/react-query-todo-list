@@ -9,15 +9,13 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ToastContainer, toast } from "react-toastify";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 const queryErrorHandler = (error: Error) => {
-  console.log("ERROR!!!!!!!!!");
-  toast.error(`${error.message}`, {});
+  console.log(`${error.message}`);
 };
 
 const queryClient = new QueryClient({
@@ -38,7 +36,6 @@ const queryClient = new QueryClient({
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ToastContainer />
       <App />
       <ReactQueryDevtools />
     </QueryClientProvider>

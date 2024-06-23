@@ -16,8 +16,7 @@ const fetchTodos = async (): Promise<Todo[] | void> => {
       return res;
     })
     .catch((err) => {
-      console.log(`ERROR: ${err}`);
-      return { data: [] };
+      throw new Error(`ERROR: ${err}`);
     });
 
   return response.data;
@@ -30,7 +29,7 @@ const fetchTodoById = async (id: number): Promise<Todo> => {
       return res;
     })
     .catch((err) => {
-      throw new Error("Error Fetching Todo List");
+      throw new Error(`ERROR: ${err}`);
     });
   return response.data;
 };
