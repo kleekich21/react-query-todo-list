@@ -8,11 +8,9 @@ import axios from "axios";
 import { delay } from "../utils";
 
 const fetchTodos = async (): Promise<Todo[] | void> => {
-  const delayPromise = delay(2500); // 의도적으로 일정 시간 동안 로딩 화면을 보여줘야하는 상황
-  const fetchPromise = axios.get("https://jsonplaceholder.typicode.com/todos");
-
-  const response = await Promise.all([delayPromise, fetchPromise])
-    .then(([_, res]) => {
+  const response = await axios
+    .get("https://jsonplaceholder.typicode.com/todos")
+    .then((res) => {
       return res;
     })
     .catch((err) => {
@@ -20,6 +18,18 @@ const fetchTodos = async (): Promise<Todo[] | void> => {
     });
 
   return response.data;
+};
+
+const fetchTodosWithDelay = async (ms: number): Promise<Todo[] | void> => {
+  const fetchPromise = fetchTodos();
+  const data = await Promise.all([delay(ms), fetchPromise])
+    .then(([_, data]) => {
+      return data;
+    })
+    .catch((err) => {
+      throw new Error(`ERROR: ${err}`);
+    });
+  return data;
 };
 
 const fetchTodoById = async (id: number): Promise<Todo> => {
@@ -35,15 +45,23 @@ const fetchTodoById = async (id: number): Promise<Todo> => {
 };
 
 export const todos = createQueryKeys("todos", {
-  list: {
+  count: {
     queryKey: null,
     queryFn: fetchTodos,
+  },
+  list: {
+    queryKey: null,
+    queryFn: () => fetchTodosWithDelay(2500),
   },
   detail: (todoId: number) => ({
     queryKey: [todoId],
     queryFn: () => fetchTodoById(todoId),
   }),
 });
+
+export function useTodoCount() {
+  return useSuspenseQuery(todos.count);
+}
 
 export function useTodoList() {
   return useSuspenseQuery(todos.list);

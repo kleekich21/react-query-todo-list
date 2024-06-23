@@ -11,9 +11,11 @@ function App() {
       <h1>Todo List</h1>
       <AddTodo />
       <ErrorBoundary fallback={<div> ERRROR! </div>}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Big Loading...</div>}>
           <TodoCount />
-          <TodoList />
+          <Suspense fallback={<div>Loading...(after 2.5secons)</div>}>
+            <TodoList />
+          </Suspense>
         </Suspense>
       </ErrorBoundary>
     </div>
