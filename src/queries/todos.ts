@@ -5,7 +5,7 @@ import {
 } from "@lukemorales/query-key-factory";
 import { Todo } from "../types/todos";
 import axios from "axios";
-import { delay } from "../utils";
+import { withDelay } from "../utils";
 
 const fetchTodos = async (): Promise<Todo[] | void> => {
   const response = await axios
@@ -20,17 +20,7 @@ const fetchTodos = async (): Promise<Todo[] | void> => {
   return response.data;
 };
 
-const fetchTodosWithDelay = async (ms: number): Promise<Todo[] | void> => {
-  const fetchPromise = fetchTodos();
-  const data = await Promise.all([delay(ms), fetchPromise])
-    .then(([_, data]) => {
-      return data;
-    })
-    .catch((err) => {
-      throw new Error(`ERROR: ${err}`);
-    });
-  return data;
-};
+const fetchTodosWithDelay = withDelay(fetchTodos, 2500);
 
 const fetchTodoById = async (id: number): Promise<Todo> => {
   const response = await axios
@@ -51,7 +41,7 @@ export const todos = createQueryKeys("todos", {
   },
   list: {
     queryKey: null,
-    queryFn: () => fetchTodosWithDelay(2500),
+    queryFn: fetchTodosWithDelay,
   },
   detail: (todoId: number) => ({
     queryKey: [todoId],
